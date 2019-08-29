@@ -1,6 +1,8 @@
 package com.sudnae.liteorm.utils;
 
 import com.sudnae.liteorm.annotations.ColumnName;
+import com.sudnae.liteorm.annotations.TableName;
+import com.sudnae.liteorm.exception.NotDefineTableNameException;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
@@ -53,7 +55,7 @@ public class ReflectUtil {
         return inject2Bean(set, beanClz, getPrivateFieldInfoByAnnotation(beanClz, ColumnName.class));
     }
 
-    public static <T>T inject2Bean(ResultSet set, Class<T> beanClz, List<FieldInfo> fieldInfoList) throws NoSuchMethodException, SQLException, InvocationTargetException, IllegalAccessException {
+    public static <T>T inject2Bean(ResultSet set, Class<T> beanClz, List<FieldInfo> fieldInfoList) throws SQLException, InvocationTargetException, IllegalAccessException {
         T bean = createNewInstance(beanClz);
         for (FieldInfo fieldInfo : fieldInfoList) {
             String keyName = "";

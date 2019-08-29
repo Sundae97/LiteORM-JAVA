@@ -27,11 +27,14 @@ public class LiteOrmBaseDao<T> {
         session = LiteOrmSqlSession.getInstance();
 
         try {
-            Annotation annotation = AnnotationUtil.getClassAnnotation(entityClz, TableName.class);
-            if(annotation == null)
-                throw new NotDefineTableNameException(entityClz);
-            tableName = ((TableName)annotation).value();
+            tableName = (String) AnnotationUtil.getTableNameValue(entityClz);
         } catch (NotDefineTableNameException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
     }
