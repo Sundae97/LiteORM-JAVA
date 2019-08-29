@@ -42,25 +42,30 @@ public class ReflectUtil {
         //回到初始状态
 
         List<FieldInfo> fieldInfoList = getPrivateFieldInfoByAnnotation(elementType, ColumnName.class);
-
         while (set.next()){
-            E element = createNewInstance(elementType);
-            for (FieldInfo fieldInfo : fieldInfoList) {
-                String keyName = "";
-                if(((ColumnName)fieldInfo.annotation).value().equals(""))
-                    keyName = fieldInfo.fieldName;
-                else
-                    keyName = ((ColumnName)fieldInfo.annotation).value();
-                Object o = set.getObject(keyName, fieldInfo.type);
-                fieldInfo.setMethod.invoke(element, o);
-            }
+            E element = inject2Bean(set, elementType, fieldInfoList);
             list.add(element);
         }
         return list;
     }
 
-    public static <T>T inject2Bean(){
-        return null;
+    public static <T>T inject2Bean(ResultSet set, Class<T> beanClz) throws NoSuchMethodException, IllegalAccessException, SQLException, InvocationTargetException {
+        return inject2Bean(set, beanClz, getPrivateFieldInfoByAnnotation(beanClz, ColumnName.class));
+    }
+
+    public static <T>T inject2Bean(ResultSet set, Class<T> beanClz, List<FieldInfo> fieldInfoList) throws NoSuchMethodException, SQLException, InvocationTargetException, IllegalAccessException {
+        T bean = createNewInstance(beanClz);
+        for (FieldInfo fieldInfo : fieldInfoList) {
+            String keyName = "";
+            if(((ColumnName)fieldInfo.annotation).value() == null ||
+                    ((ColumnName)fieldInfo.annotation).value().equals(""))
+                keyName = fieldInfo.fieldName;
+            else
+                keyName = ((ColumnName)fieldInfo.annotation).value();
+            Object o = set.getObject(keyName, fieldInfo.type);
+            fieldInfo.setMethod.invoke(bean, o);
+        }
+        return bean;
     }
 
     private static List<String> getColumnNames(ResultSet set) throws SQLException {
