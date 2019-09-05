@@ -10,7 +10,7 @@ import java.lang.reflect.InvocationTargetException;
  * @author @Sundae
  * @Email 948820549@qq.com
  */
-public class DeleteBuilder extends AbstractSqlBuilder<DeleteBuilder> {
+public class DeleteBuilder extends AbstractSqlBuilder {
     private String tableName;
 
     public DeleteBuilder(String tableName){
@@ -32,8 +32,20 @@ public class DeleteBuilder extends AbstractSqlBuilder<DeleteBuilder> {
     }
 
 
-    @Override
-    public DeleteBuilder column(String columnName) {
+    public DeleteBuilder where(String whereExpr) {
+        if(whereExpr == null || whereExpr.length() == 0)
+            return this;
+        whereList.add(whereExpr);
         return this;
+    }
+
+
+
+    @Override
+    public String toString() {
+        sqlBuilder.append("DELETE FROM ");
+        sqlBuilder.append(tableName);
+        appendList(sqlBuilder, whereList, " WHERE ", " AND ");
+        return sqlBuilder.toString();
     }
 }

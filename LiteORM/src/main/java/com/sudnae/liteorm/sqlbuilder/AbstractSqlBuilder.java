@@ -1,6 +1,8 @@
 package com.sudnae.liteorm.sqlbuilder;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -8,27 +10,39 @@ import java.util.List;
  * CopyRight @Sundae
  * Email 948820549@qq.com
  */
-abstract class AbstractSqlBuilder<T> {
-    protected StringBuilder sqlBuilder;
-    protected List<String> wheres = new ArrayList<>();
-    protected List<String> columns = new ArrayList<>();
-
-    public abstract T column(String columnName);
+abstract class AbstractSqlBuilder {
+    private final static SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+    protected StringBuilder sqlBuilder = new StringBuilder();
+    protected List<String> whereList = new ArrayList<>();
+    protected List<String> columnList = new ArrayList<>();
 
     @Override
-    public String toString() {
-        return sqlBuilder.toString();
+    public abstract String toString();
+
+    protected void appendList(StringBuilder sqlBuilder, List list, String first, String connector) {
+        appendList(sqlBuilder, list, first, connector, false);
     }
 
-    protected void appendList(StringBuilder sqlBuilder, List<String> list, String first, String connector){
+    protected void appendList(StringBuilder sqlBuilder, List list, String first, String connector, boolean autoSqlFormat){
         boolean isFirst = true;
-        for (String s : list){
+        for (Object s : list){
             if(isFirst){
-                sqlBuilder.append(String.format(" %s ", first));
+                sqlBuilder.append(first);
             }else{
-                sqlBuilder.append(String.format(" %s ", connector));
+                sqlBuilder.append(connector);
             }
-            sqlBuilder.append(s);
+            if(autoSqlFormat){
+                if(s instanceof String){
+                    sqlBuilder.append("'"+s+"'");
+                }else if(s instanceof Date){
+                    sqlBuilder.append("'"+dateFormat.format(s)+"'");
+                }else{
+                    sqlBuilder.append(s);
+                }
+            }else {
+                sqlBuilder.append(s);
+            }
+
             isFirst = false;
         }
     }

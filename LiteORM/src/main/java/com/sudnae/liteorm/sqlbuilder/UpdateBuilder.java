@@ -6,8 +6,9 @@ package com.sudnae.liteorm.sqlbuilder;
  * Email 948820549@qq.com
  */
 public class UpdateBuilder extends AbstractSqlBuilder {
+
     @Override
-    public Object column(String columnName) {
+    public String toString() {
         return null;
     }
 }
