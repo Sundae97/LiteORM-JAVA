@@ -32,18 +32,22 @@ abstract class AbstractSqlBuilder {
                 sqlBuilder.append(connector);
             }
             if(autoSqlFormat){
-                if(s instanceof String){
-                    sqlBuilder.append("'"+s+"'");
-                }else if(s instanceof Date){
-                    sqlBuilder.append("'"+dateFormat.format(s)+"'");
-                }else{
-                    sqlBuilder.append(s);
-                }
+                sqlBuilder.append(getSqlValueString(s));
             }else {
                 sqlBuilder.append(s);
             }
 
             isFirst = false;
+        }
+    }
+
+    protected String getSqlValueString(Object v){
+        if(v instanceof String){
+            return "'"+v+"'";
+        }else if(v instanceof Date){
+            return  "'"+dateFormat.format(v)+"'";
+        }else{
+            return v+"";
         }
     }
 }
