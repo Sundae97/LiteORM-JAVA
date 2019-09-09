@@ -8,8 +8,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 2019/8/27
@@ -93,10 +92,26 @@ public class ReflectUtil {
         return null;
     }
 
+    public static Map<String, Object> getColumnNamesAndValues(Object object) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Map<String, Object> map = new HashMap<>();
+        Field fields[] = object.getClass().getDeclaredFields();
+        for(Field f : fields){
+            if(f.isAnnotationPresent(ColumnName.class)){
+                String fieldName = f.getName();
+                String columnName = f.getAnnotation(ColumnName.class).value();
+                Object value = object.getClass().getMethod("get" +
+                        fieldName.substring(0,1).toUpperCase() +
+                        fieldName.substring(1)).invoke(object);
+                map.put(columnName, value);
+            }
+        }
+        return map;
+    }
+
     private static <A extends Annotation>List<FieldInfo> getPrivateFieldInfoByAnnotation(Class clz, Class<A> annotationClz) throws NoSuchMethodException {
         List<FieldInfo> fieldInfoList = new ArrayList<>();
-        Field Fields[] = clz.getDeclaredFields();
-        for(Field f : Fields){
+        Field fields[] = clz.getDeclaredFields();
+        for(Field f : fields){
             if(f.isAnnotationPresent(annotationClz)){
                 A annotation = f.getAnnotation(annotationClz);
                 FieldInfo<A> fieldInfo = new FieldInfo<>();

@@ -1,15 +1,11 @@
 package com.sudnae.liteorm.dao;
 
-import com.sudnae.liteorm.annotations.TableName;
 import com.sudnae.liteorm.exception.NotDefineTableNameException;
 import com.sudnae.liteorm.session.LiteOrmSqlSession;
 import com.sudnae.liteorm.utils.AnnotationUtil;
 import com.sudnae.liteorm.utils.ReflectUtil;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -23,6 +19,7 @@ public class LiteOrmBaseDao<T> {
     private Class<T> entityClz = ReflectUtil.getGenericClass(getClass());
     private LiteOrmSqlSession session;
     private String tableName = "";
+    private boolean isBeginTransaction = false;
     public LiteOrmBaseDao() {
         session = LiteOrmSqlSession.getInstance();
 
@@ -55,6 +52,38 @@ public class LiteOrmBaseDao<T> {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public void add(T entity){
+        beginTransaction();
+
+    }
+
+    public void delete(T entity){
+        beginTransaction();
+
+    }
+
+    public void update(T entity){
+        beginTransaction();
+
+    }
+
+    public List<T> findEntitiesToList(String condition){
+        return null;
+    }
+
+    public T findEntity(String condition){
+        return null;
+    }
+
+    private void beginTransaction(){
+        isBeginTransaction = true;
+    }
+
+    public boolean saveChanges(){
+        isBeginTransaction = false;
+        return false;
     }
 
 
