@@ -1,5 +1,7 @@
 package com.sudnae.liteorm.sqlbuilder;
 
+import com.sudnae.liteorm.utils.SqlUtil;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,7 +13,6 @@ import java.util.List;
  * Email 948820549@qq.com
  */
 abstract class AbstractSqlBuilder {
-    private final static SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
     protected StringBuilder sqlBuilder = new StringBuilder();
     protected List<String> whereList = new ArrayList<>();
     protected List<String> columnList = new ArrayList<>();
@@ -32,22 +33,12 @@ abstract class AbstractSqlBuilder {
                 sqlBuilder.append(connector);
             }
             if(autoSqlFormat){
-                sqlBuilder.append(getSqlValueString(s));
+                sqlBuilder.append(SqlUtil.getSqlValueString(s));
             }else {
                 sqlBuilder.append(s);
             }
 
             isFirst = false;
-        }
-    }
-
-    protected String getSqlValueString(Object v){
-        if(v instanceof String){
-            return "'"+v+"'";
-        }else if(v instanceof Date){
-            return  "'"+dateFormat.format(v)+"'";
-        }else{
-            return v+"";
         }
     }
 }

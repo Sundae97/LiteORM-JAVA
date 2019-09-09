@@ -26,7 +26,8 @@ class ReflectUtilTest {
         for (Map.Entry<String, Object> entry :
                 map.entrySet()) {
             System.out.println(entry.getKey() + "  " + entry.getValue());
-
+            if(entry.getValue() instanceof String)
+                System.out.println("String");
         }
     }
 }

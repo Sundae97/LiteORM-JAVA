@@ -2,6 +2,7 @@ package com.sudnae.liteorm.sqlbuilder;
 
 import com.sudnae.liteorm.exception.NotDefineTableNameException;
 import com.sudnae.liteorm.utils.AnnotationUtil;
+import com.sudnae.liteorm.utils.SqlUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -55,7 +56,7 @@ public class UpdateBuilder extends AbstractSqlBuilder {
         sqlBuilder.append(tableName);
         List<String> tmp = new ArrayList<>();
         for (Map.Entry<String, Object> entry : kvMap.entrySet()) {
-            tmp.add(entry.getKey() + "=" + getSqlValueString(entry.getValue()));
+            tmp.add(entry.getKey() + "=" + SqlUtil.getSqlValueString(entry.getValue()));
         }
         appendList(sqlBuilder, tmp, " SET ",",");
         appendList(sqlBuilder, whereList, " WHERE ", " AND ");

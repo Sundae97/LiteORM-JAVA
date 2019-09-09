@@ -1,14 +1,18 @@
 package com.sudnae.liteorm.dao;
 
 import com.sudnae.liteorm.exception.NotDefineTableNameException;
+import com.sudnae.liteorm.log.LiteOrmLogger;
 import com.sudnae.liteorm.session.LiteOrmSqlSession;
+import com.sudnae.liteorm.sqlbuilder.InsertBuilder;
 import com.sudnae.liteorm.utils.AnnotationUtil;
 import com.sudnae.liteorm.utils.ReflectUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 2019/8/27
@@ -20,6 +24,7 @@ public class LiteOrmBaseDao<T> {
     private LiteOrmSqlSession session;
     private String tableName = "";
     private boolean isBeginTransaction = false;
+    private List<String> sqlQueue = new ArrayList<>();
     public LiteOrmBaseDao() {
         session = LiteOrmSqlSession.getInstance();
 
@@ -56,7 +61,20 @@ public class LiteOrmBaseDao<T> {
 
     public void add(T entity){
         beginTransaction();
-
+        try {
+            Map<String,Object> map = ReflectUtil.getColumnNamesAndValues(entity);
+            String sql = new InsertBuilder(tableName)
+                    .columns(new ArrayList<>(map.keySet()))
+                    .values(new ArrayList<>(map.values()))
+                    .toString();
+            LiteOrmLogger.info(sql);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     public void delete(T entity){
@@ -84,6 +102,10 @@ public class LiteOrmBaseDao<T> {
     public boolean saveChanges(){
         isBeginTransaction = false;
         return false;
+    }
+
+    private void rollback(){
+
     }
 
 

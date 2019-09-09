@@ -42,7 +42,21 @@ public class InsertBuilder extends AbstractSqlBuilder {
         return this;
     }
 
+    public InsertBuilder columns(List<String> columns){
+        for (String column : columns) {
+            columnList.add(column);
+        }
+        return this;
+    }
+
     public InsertBuilder values(Object ...values){
+        for (Object value : values) {
+            valueList.add(value);
+        }
+        return this;
+    }
+
+    public InsertBuilder values(List<Object> values){
         for (Object value : values) {
             valueList.add(value);
         }
