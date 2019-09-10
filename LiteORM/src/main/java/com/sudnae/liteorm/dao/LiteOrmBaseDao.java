@@ -3,6 +3,7 @@ package com.sudnae.liteorm.dao;
 import com.sudnae.liteorm.exception.NotDefineTableNameException;
 import com.sudnae.liteorm.log.LiteOrmLogger;
 import com.sudnae.liteorm.session.LiteOrmSqlSession;
+import com.sudnae.liteorm.sqlbuilder.DeleteBuilder;
 import com.sudnae.liteorm.sqlbuilder.InsertBuilder;
 import com.sudnae.liteorm.utils.AnnotationUtil;
 import com.sudnae.liteorm.utils.ReflectUtil;
@@ -68,6 +69,7 @@ public class LiteOrmBaseDao<T> {
                     .values(new ArrayList<>(map.values()))
                     .toString();
             LiteOrmLogger.info(sql);
+            sqlQueue.add(sql);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
@@ -99,13 +101,14 @@ public class LiteOrmBaseDao<T> {
         isBeginTransaction = true;
     }
 
-    public boolean saveChanges(){
+    public boolean saveChanges() throws SQLException {
         isBeginTransaction = false;
+        session.commit();
         return false;
     }
 
-    private void rollback(){
-
+    public void rollback() throws SQLException {
+        session.rollback();;
     }
 
 

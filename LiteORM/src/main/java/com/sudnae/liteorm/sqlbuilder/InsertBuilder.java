@@ -12,10 +12,9 @@ import java.util.List;
  * CopyRight @Sundae
  * Email 948820549@qq.com
  */
-public class InsertBuilder extends AbstractSqlBuilder {
+public class InsertBuilder extends AbstractSqlBuilder<InsertBuilder> {
 
     private String tableName;
-    private List<Object> valueList = new ArrayList<>();
 
     public InsertBuilder(String tableName){
         this.tableName = tableName;
@@ -35,33 +34,7 @@ public class InsertBuilder extends AbstractSqlBuilder {
         }
     }
 
-    public InsertBuilder columns(String ...columns){
-        for (String column : columns) {
-            columnList.add(column);
-        }
-        return this;
-    }
 
-    public InsertBuilder columns(List<String> columns){
-        for (String column : columns) {
-            columnList.add(column);
-        }
-        return this;
-    }
-
-    public InsertBuilder values(Object ...values){
-        for (Object value : values) {
-            valueList.add(value);
-        }
-        return this;
-    }
-
-    public InsertBuilder values(List<Object> values){
-        for (Object value : values) {
-            valueList.add(value);
-        }
-        return this;
-    }
 
 
     @Override

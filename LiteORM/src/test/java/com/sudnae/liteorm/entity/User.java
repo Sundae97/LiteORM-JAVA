@@ -18,7 +18,7 @@ public class User {
     @ColumnName("name")
     private String name;
     @ColumnName("sex")
-    private boolean sex;
+    private Boolean sex;
     @ColumnName("birth")
     private Date birth;
 
@@ -48,11 +48,11 @@ public class User {
         this.name = name;
     }
 
-    public boolean isSex() {
-        return sex; //TODO 这日了狗的boolean值居然是is
+    public Boolean isSex() {
+        return sex; //TODO 这日了狗的boolean值居然是is 这是一个get方法
     }
 
-    public void setSex(boolean sex) {
+    public void setSex(Boolean sex) {
         this.sex = sex;
     }
 

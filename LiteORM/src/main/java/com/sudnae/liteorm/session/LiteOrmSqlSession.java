@@ -61,6 +61,7 @@ public class LiteOrmSqlSession {
 
     private void connect() throws SQLException {
         connection = DriverManager.getConnection(url, userName, password);
+        connection.setAutoCommit(false);
     }
 
     private void reconnect(){
@@ -88,6 +89,14 @@ public class LiteOrmSqlSession {
         checkConnected();
         Statement stmt = connection.createStatement();
         return stmt.executeUpdate(sql);
+    }
+
+    public void commit() throws SQLException {
+        connection.commit();
+    }
+
+    public void rollback() throws SQLException {
+        connection.rollback();
     }
 
 }

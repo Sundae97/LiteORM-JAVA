@@ -99,9 +99,17 @@ public class ReflectUtil {
             if(f.isAnnotationPresent(ColumnName.class)){
                 String fieldName = f.getName();
                 String columnName = f.getAnnotation(ColumnName.class).value();
-                Object value = object.getClass().getMethod("get" +
+                Object value = null;
+                if(f.getGenericType().toString().equals("boolean") ||
+                        f.getGenericType().toString().equals("class java.lang.Boolean")){
+                    value = object.getClass().getMethod("is" +
                         fieldName.substring(0,1).toUpperCase() +
                         fieldName.substring(1)).invoke(object);
+                }else{
+                    value = object.getClass().getMethod("get" +
+                        fieldName.substring(0,1).toUpperCase() +
+                        fieldName.substring(1)).invoke(object);
+                }
                 map.put(columnName, value);
             }
         }

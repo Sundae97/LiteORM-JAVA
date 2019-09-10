@@ -12,10 +12,39 @@ import java.util.List;
  * CopyRight @Sundae
  * Email 948820549@qq.com
  */
-abstract class AbstractSqlBuilder {
+abstract class AbstractSqlBuilder<T> {
     protected StringBuilder sqlBuilder = new StringBuilder();
     protected List<String> whereList = new ArrayList<>();
     protected List<String> columnList = new ArrayList<>();
+    protected List<Object> valueList = new ArrayList<>();
+
+    public T columns(String ...columns){
+        for (String column : columns) {
+            columnList.add(column);
+        }
+        return (T)this;
+    }
+
+    public T columns(List<String> columns){
+        for (String column : columns) {
+            columnList.add(column);
+        }
+        return (T)this;
+    }
+
+    public T values(Object ...values){
+        for (Object value : values) {
+            valueList.add(value);
+        }
+        return (T)this;
+    }
+
+    public T values(List<Object> values){
+        for (Object value : values) {
+            valueList.add(value);
+        }
+        return (T)this;
+    }
 
     @Override
     public abstract String toString();

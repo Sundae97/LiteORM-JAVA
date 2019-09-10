@@ -10,7 +10,7 @@ import java.lang.reflect.InvocationTargetException;
  * CopyRight @Sundae
  * Email 948820549@qq.com
  */
-public class SelectBuilder extends AbstractSqlBuilder {
+public class SelectBuilder extends AbstractSqlBuilder<SelectBuilder> {
     private String tableName;
     public SelectBuilder(String tableName){
         this.tableName = tableName;
@@ -42,7 +42,7 @@ public class SelectBuilder extends AbstractSqlBuilder {
             return this;
         whereList.add(whereExpr);
         return this;
-    }
+    }//TODO
 
     @Override
     public String toString() {

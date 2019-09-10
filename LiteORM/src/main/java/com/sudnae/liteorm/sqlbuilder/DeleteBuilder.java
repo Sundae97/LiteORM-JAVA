@@ -10,7 +10,7 @@ import java.lang.reflect.InvocationTargetException;
  * @author @Sundae
  * @Email 948820549@qq.com
  */
-public class DeleteBuilder extends AbstractSqlBuilder {
+public class DeleteBuilder extends AbstractSqlBuilder<DeleteBuilder> {
     private String tableName;
 
     public DeleteBuilder(String tableName){
