@@ -5,6 +5,8 @@ import com.sudnae.liteorm.log.LiteOrmLogger;
 import com.sudnae.liteorm.session.LiteOrmSqlSession;
 import com.sudnae.liteorm.sqlbuilder.DeleteBuilder;
 import com.sudnae.liteorm.sqlbuilder.InsertBuilder;
+import com.sudnae.liteorm.sqlbuilder.SelectBuilder;
+import com.sudnae.liteorm.sqlbuilder.UpdateBuilder;
 import com.sudnae.liteorm.utils.AnnotationUtil;
 import com.sudnae.liteorm.utils.ReflectUtil;
 
@@ -44,6 +46,24 @@ public class LiteOrmBaseDao<T> {
 
     public List<T> listAll(){
         String sql = "SELECT * FROM " + tableName;
+        return toList(sql);
+    }
+
+    public List<T> findEntitiesWhere(String where){
+        String sql = new SelectBuilder(tableName)
+                .where(where)
+                .toString();
+        return toList(sql);
+    }
+
+    public T findEntity(String where){
+        String sql = new SelectBuilder(tableName)
+                .where(where)
+                .toString();
+        return toList(sql).get(0);
+    }
+
+    private List<T> toList(String sql){
         List<T> list = null;
         try {
             ResultSet resultSet = session.executeQuery(sql);
@@ -79,32 +99,46 @@ public class LiteOrmBaseDao<T> {
         }
     }
 
-    public void delete(T entity){
+    public void delete(String where){
         beginTransaction();
-
+        String sql = new DeleteBuilder(tableName)
+                .where(where)
+                .toString();
+        sqlQueue.add(sql);
     }
 
     public void update(T entity){
         beginTransaction();
-
-    }
-
-    public List<T> findEntitiesToList(String condition){
-        return null;
-    }
-
-    public T findEntity(String condition){
-        return null;
+        try {
+            Map<String,Object> map = ReflectUtil.getColumnNamesAndValues(entity);
+            UpdateBuilder updateBuilder = new UpdateBuilder(tableName);
+            for (String key : map.keySet()){
+                if(key.toLowerCase().equals("id"))
+                    updateBuilder.where("id=" + map.get(key));
+                else
+                    updateBuilder.set(key, map.get(key));
+            }
+            String sql = updateBuilder.toString();
+            sqlQueue.add(sql);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     private void beginTransaction(){
         isBeginTransaction = true;
     }
 
-    public boolean saveChanges() throws SQLException {
+    public void saveChanges() throws SQLException {
         isBeginTransaction = false;
+        for (String sql : sqlQueue) {
+            session.execute(sql);
+        }
         session.commit();
-        return false;
     }
 
     public void rollback() throws SQLException {

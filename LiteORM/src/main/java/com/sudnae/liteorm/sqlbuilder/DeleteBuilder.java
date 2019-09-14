@@ -4,6 +4,7 @@ import com.sudnae.liteorm.exception.NotDefineTableNameException;
 import com.sudnae.liteorm.utils.AnnotationUtil;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 /**
  * 2019/8/29
@@ -31,15 +32,12 @@ public class DeleteBuilder extends AbstractSqlBuilder<DeleteBuilder> {
         }
     }
 
-
     public DeleteBuilder where(String whereExpr) {
         if(whereExpr == null || whereExpr.length() == 0)
             return this;
         whereList.add(whereExpr);
         return this;
     }
-
-
 
     @Override
     public String toString() {
