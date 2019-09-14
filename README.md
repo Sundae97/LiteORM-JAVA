@@ -9,5 +9,6 @@
 ```
 TODOList
 移除Demo模块，改为使用单元测试
-完成SelectBuilder，UpdateBuilder，InsertBuilder，DeleteBuilder
+完善SelectBuilder，UpdateBuilder，InsertBuilder，DeleteBuilder
+完善SQLBuilder 拆封 WHERE, GROUP BY, HAVING, ORDER BY 
 ```
